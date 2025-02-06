@@ -20,6 +20,7 @@ public class UserInfo extends BaseEntity {
     private String username;
 
     @Column(nullable = false, unique = true)
+//    @Email(message = "이메일 형식에 맞게 작성")
     private String email;
 
     @Column(nullable = false)

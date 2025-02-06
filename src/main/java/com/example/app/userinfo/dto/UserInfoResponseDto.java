@@ -1,5 +1,6 @@
 package com.example.app.userinfo.dto;
 
+import com.example.app.userinfo.entity.UserInfo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -7,7 +8,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserInfoResponseDto {
 
+    private final Long id;
     private final String username;
     private final String email;
 
+    public static UserInfoResponseDto toDto(UserInfo userInfo){
+        return new UserInfoResponseDto(userInfo.getId(), userInfo.getUsername(), userInfo.getEmail());
+    }
 }
