@@ -1,7 +1,7 @@
 package com.example.app.userinfo.entity;
 
 
-import com.example.app.common.commonentity.BaseEntity;
+import com.example.app.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

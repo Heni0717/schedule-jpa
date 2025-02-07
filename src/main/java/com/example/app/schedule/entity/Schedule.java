@@ -1,7 +1,7 @@
 package com.example.app.schedule.entity;
 
 
-import com.example.app.common.commonentity.BaseEntity;
+import com.example.app.common.entity.BaseEntity;
 import com.example.app.userinfo.entity.UserInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
