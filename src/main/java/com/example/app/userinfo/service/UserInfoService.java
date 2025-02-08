@@ -1,5 +1,6 @@
 package com.example.app.userinfo.service;
 
+import com.example.app.userinfo.auth.SessionStorage;
 import com.example.app.userinfo.dto.UserInfoResponseDto;
 import com.example.app.userinfo.entity.UserInfo;
 import com.example.app.userinfo.repository.UserInfoRepository;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
+    private final SessionStorage sessionStorage;
 
     public UserInfoResponseDto signUp(String username, String email, String password) {
         UserInfo userInfo = new UserInfo(username, email, password);
@@ -46,5 +48,6 @@ public class UserInfoService {
     public void deleteUserInfo(Long id) {
         UserInfo userInfo = userInfoRepository.findUserInfosByIdOrElseThrow(id);
         userInfoRepository.delete(userInfo);
+        sessionStorage.removeSessionByUserId(id);
     }
 }
