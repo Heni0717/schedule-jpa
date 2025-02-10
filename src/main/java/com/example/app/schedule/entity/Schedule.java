@@ -27,9 +27,10 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserInfo userInfo;
 
-    public Schedule(String title, String content){
+    public Schedule(String title, String content, UserInfo userInfo){
         this.title = title;
         this.content = content;
+        this.userInfo = userInfo;
     }
 
     public void updateSchedule(String title, String content){

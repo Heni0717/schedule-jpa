@@ -1,9 +1,9 @@
 package com.example.app.common.config;
 
+import com.example.app.common.util.AuthUtil;
 import com.example.app.userinfo.auth.SessionStorage;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +21,12 @@ public class SessionAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestUri = request.getRequestURI();
-        if (isExcludedPath(requestUri)) {
+        if (AuthUtil.isExcludedPath(requestUri, excludedPaths)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String sessionId = extractSessionIdFromCookies(request.getCookies());
+        String sessionId = AuthUtil.extractSessionIdFromCookies(request.getCookies());
         if (sessionId == null || sessionStorage.getSession(sessionId) == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("text/plain; charset=UTF-8");
@@ -36,18 +36,5 @@ public class SessionAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean isExcludedPath(String uri) {
-        return excludedPaths.stream().anyMatch(uri::contains);
-    }
 
-    private String extractSessionIdFromCookies(Cookie[] cookies) {
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("SESSIONID".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
 }

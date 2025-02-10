@@ -1,11 +1,10 @@
 package com.example.app.common.config;
 
+import com.example.app.common.util.AuthUtil;
 import com.example.app.userinfo.auth.AuthService;
 import com.example.app.userinfo.auth.SessionStorage;
-import com.example.app.userinfo.entity.UserInfo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +23,9 @@ public class OwnerCheckFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
-            Long resourceId = Long.valueOf(extractResourceId(request.getRequestURI()));
+            Long resourceId = Long.valueOf(AuthUtil.extractResourceId(request.getRequestURI()));
 
-            Long currentUserId = getCurrentUserId(request);
+            Long currentUserId = authService.getCurrentUserId(request);
 
             boolean isOwner = authService.isOwner(resourceId, currentUserId);
             if (!isOwner) {
@@ -46,41 +45,5 @@ public class OwnerCheckFilter extends OncePerRequestFilter {
         }
     }
 
-    /**
-     * URI에서 리소스 ID 추출
-     */
-    private String extractResourceId(String uri) {
-        String[] segments = uri.split("/");
-        return segments[segments.length - 1];
-    }
 
-    /**
-     * 쿠키에서 세션 ID 추출 및 현재 유저 ID 가져오기
-     */
-    private Long getCurrentUserId(HttpServletRequest request) {
-        String sessionId = extractSessionIdFromCookies(request.getCookies());
-        if (sessionId == null) {
-            throw new IllegalArgumentException("세션 ID가 존재하지 않음");
-        }
-
-        UserInfo userInfo = sessionStorage.getSession(sessionId);
-        if (userInfo == null) {
-            throw new IllegalArgumentException("유효하지 않은 세션");
-        }
-        return userInfo.getId();
-    }
-
-    /**
-     * 쿠키에서 세션 ID 추출
-     */
-    private String extractSessionIdFromCookies(Cookie[] cookies) {
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("SESSIONID".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
 }

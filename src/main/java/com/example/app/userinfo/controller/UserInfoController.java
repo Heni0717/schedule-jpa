@@ -24,7 +24,7 @@ public class UserInfoController {
     public ResponseEntity<UserInfoResponseDto> signUp(@RequestBody SignUpRequestDto requestDto){
         UserInfoResponseDto userInfoResponseDto =
                 userInfoService.signUp(
-                        requestDto.getUsername(),
+                        requestDto.getUserName(),
                         requestDto.getEmail(),
                         requestDto.getPassword()
                 );
@@ -49,7 +49,7 @@ public class UserInfoController {
     ){
         UserInfoResponseDto userInfoResponseDto =
         userInfoService.updateUserInfoById(
-                id, requestDto.getUsername(), requestDto.getOldPassword(), requestDto.getNewPassword()
+                id, requestDto.getUserName(), requestDto.getOldPassword(), requestDto.getNewPassword()
         );
         return new ResponseEntity<>(userInfoResponseDto, HttpStatus.OK);
     }

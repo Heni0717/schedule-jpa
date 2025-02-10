@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UpdateUserInfoRequestDto {
 
-    private final String username;
+    private final String userName;
     private final String oldPassword;
     private final String newPassword;
 
