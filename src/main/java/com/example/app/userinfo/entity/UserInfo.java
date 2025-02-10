@@ -1,7 +1,7 @@
 package com.example.app.userinfo.entity;
 
 
-import com.example.app.common.commonentity.BaseEntity;
+import com.example.app.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class UserInfo extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String username;
+    private String userName;
 
     @Column(nullable = false, unique = true)
 //    @Email(message = "이메일 형식에 맞게 작성")
@@ -26,14 +26,14 @@ public class UserInfo extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    public UserInfo(String username, String email, String password){
-        this.username = username;
+    public UserInfo(String userName, String email, String password){
+        this.userName = userName;
         this.email = email;
         this.password = password;
     }
 
-    public void updateUser(String username, String password){
-        this.username = username;
+    public void updateUser(String userName, String password){
+        this.userName = userName;
         this.password = password;
     }
 

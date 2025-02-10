@@ -1,14 +1,12 @@
-package com.example.app.userinfo.dto;
+package com.example.app.userinfo.auth;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class SignUpRequestDto {
+public class LoginRequestDto {
 
-    private final String userName;
     private final String email;
     private final String password;
-
 }

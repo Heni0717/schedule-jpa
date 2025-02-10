@@ -4,6 +4,8 @@ import com.example.app.userinfo.dto.SignUpRequestDto;
 import com.example.app.userinfo.dto.UpdateUserInfoRequestDto;
 import com.example.app.userinfo.dto.UserInfoResponseDto;
 import com.example.app.userinfo.service.UserInfoService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,11 @@ public class UserInfoController {
 
     private final UserInfoService userInfoService;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<UserInfoResponseDto> signUp(@RequestBody SignUpRequestDto requestDto){
         UserInfoResponseDto userInfoResponseDto =
                 userInfoService.signUp(
-                        requestDto.getUsername(),
+                        requestDto.getUserName(),
                         requestDto.getEmail(),
                         requestDto.getPassword()
                 );
@@ -47,14 +49,19 @@ public class UserInfoController {
     ){
         UserInfoResponseDto userInfoResponseDto =
         userInfoService.updateUserInfoById(
-                id, requestDto.getUsername(), requestDto.getOldPassword(), requestDto.getNewPassword()
+                id, requestDto.getUserName(), requestDto.getOldPassword(), requestDto.getNewPassword()
         );
         return new ResponseEntity<>(userInfoResponseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserInfo(@PathVariable Long id){
+    public ResponseEntity<Void> deleteUserInfo(@PathVariable Long id, HttpServletResponse response){
         userInfoService.deleteUserInfo(id);
+        Cookie sessionCookie = new Cookie("SESSIONID", null);
+        sessionCookie.setHttpOnly(true);
+        sessionCookie.setMaxAge(0);
+        sessionCookie.setPath("/");
+        response.addCookie(sessionCookie);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
