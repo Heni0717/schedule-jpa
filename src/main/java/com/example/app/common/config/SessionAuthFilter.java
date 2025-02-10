@@ -1,26 +1,26 @@
 package com.example.app.common.config;
 
 import com.example.app.common.util.AuthUtil;
-import com.example.app.userinfo.auth.SessionStorage;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class SessionAuthFilter extends OncePerRequestFilter {
+public class SessionAuthFilter implements Filter {
 
     private final SessionStorage sessionStorage;
     private final List<String> excludedPaths = List.of("/auth/login", "users/signup");
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
         String requestUri = request.getRequestURI();
+
         if (AuthUtil.isExcludedPath(requestUri, excludedPaths)) {
             filterChain.doFilter(request, response);
             return;

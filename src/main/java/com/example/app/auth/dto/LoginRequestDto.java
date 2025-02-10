@@ -1,4 +1,4 @@
-package com.example.app.userinfo.auth;
+package com.example.app.auth.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

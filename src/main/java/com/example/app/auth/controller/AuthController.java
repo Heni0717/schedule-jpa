@@ -1,5 +1,8 @@
-package com.example.app.userinfo.auth;
+package com.example.app.auth.controller;
 
+import com.example.app.auth.service.AuthService;
+import com.example.app.common.config.SessionStorage;
+import com.example.app.auth.dto.LoginRequestDto;
 import com.example.app.userinfo.entity.UserInfo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

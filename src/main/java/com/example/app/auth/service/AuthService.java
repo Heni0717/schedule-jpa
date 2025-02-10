@@ -1,5 +1,7 @@
-package com.example.app.userinfo.auth;
+package com.example.app.auth.service;
 
+import com.example.app.common.config.PasswordEncoder;
+import com.example.app.common.config.SessionStorage;
 import com.example.app.common.util.AuthUtil;
 import com.example.app.schedule.repository.ScheduleRepository;
 import com.example.app.userinfo.entity.UserInfo;
@@ -17,11 +19,12 @@ public class AuthService {
     private final UserInfoRepository userInfoRepository;
     private final ScheduleRepository scheduleRepository;
     private final SessionStorage sessionStorage;
+    private final PasswordEncoder passwordEncoder;
 
     public UserInfo login(String email, String password) {
         UserInfo userInfo = userInfoRepository.findByEmail(email)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "존재하지 않는 유저"));
-        if(!userInfo.getPassword().equals(password)){
+        if(!passwordEncoder.matches(password,userInfo.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호 불일치");
         }
         return userInfo;

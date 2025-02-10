@@ -1,6 +1,7 @@
 package com.example.app.userinfo.service;
 
-import com.example.app.userinfo.auth.SessionStorage;
+import com.example.app.common.config.PasswordEncoder;
+import com.example.app.common.config.SessionStorage;
 import com.example.app.userinfo.dto.UserInfoResponseDto;
 import com.example.app.userinfo.entity.UserInfo;
 import com.example.app.userinfo.repository.UserInfoRepository;
@@ -18,9 +19,11 @@ public class UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
     private final SessionStorage sessionStorage;
+    private final PasswordEncoder passwordEncoder;
 
     public UserInfoResponseDto signUp(String userName, String email, String password) {
-        UserInfo userInfo = new UserInfo(userName, email, password);
+        String encodedPassword = passwordEncoder.encode(password);
+        UserInfo userInfo = new UserInfo(userName, email, encodedPassword);
         UserInfo newUser = userInfoRepository.save(userInfo);
         return new UserInfoResponseDto(newUser.getId(), newUser.getUserName(), newUser.getEmail());
     }
