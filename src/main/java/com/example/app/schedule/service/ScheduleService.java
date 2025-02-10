@@ -52,4 +52,9 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
         scheduleRepository.delete(schedule);
     }
+
+    @Transactional
+    public void deleteSchedulesByUserInfo(Long id) {
+        scheduleRepository.deleteByUserInfoId(id);
+    }
 }

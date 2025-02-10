@@ -6,6 +6,7 @@ import com.example.app.auth.dto.LoginRequestDto;
 import com.example.app.userinfo.entity.UserInfo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class AuthController {
     private final SessionStorage sessionStorage;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response){
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletResponse response){
         UserInfo userInfo = authService.login(requestDto.getEmail(), requestDto.getPassword());
         String sessionId = sessionStorage.createSession(userInfo);
         Cookie sessionCookie = new Cookie("SESSIONID", sessionId);

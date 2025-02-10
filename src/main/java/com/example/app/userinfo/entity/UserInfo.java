@@ -2,10 +2,13 @@ package com.example.app.userinfo.entity;
 
 
 import com.example.app.common.model.BaseEntity;
+import com.example.app.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "user_info")
@@ -21,13 +24,13 @@ public class UserInfo extends BaseEntity {
     private String userName;
 
     @Column(nullable = false, unique = true)
-    @Email(message = "이메일 형식에 맞게 작성")
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    // casecade 연습해보기
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Schedule> schedules;
 
     public UserInfo(String userName, String email, String password){
         this.userName = userName;

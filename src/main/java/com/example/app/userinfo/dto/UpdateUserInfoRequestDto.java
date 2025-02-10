@@ -1,5 +1,6 @@
 package com.example.app.userinfo.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

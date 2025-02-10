@@ -6,6 +6,7 @@ import com.example.app.userinfo.dto.UserInfoResponseDto;
 import com.example.app.userinfo.service.UserInfoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class UserInfoController {
     private final UserInfoService userInfoService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserInfoResponseDto> signUp(@RequestBody SignUpRequestDto requestDto){
+    public ResponseEntity<UserInfoResponseDto> signUp(@Valid @RequestBody SignUpRequestDto requestDto){
         UserInfoResponseDto userInfoResponseDto =
                 userInfoService.signUp(
                         requestDto.getUserName(),
