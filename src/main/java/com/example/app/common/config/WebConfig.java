@@ -1,7 +1,6 @@
 package com.example.app.common.config;
 
-import com.example.app.userinfo.auth.AuthService;
-import com.example.app.userinfo.auth.SessionStorage;
+import com.example.app.auth.service.AuthService;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -27,7 +26,7 @@ public class WebConfig {
     @Bean
     public FilterRegistrationBean<Filter> ownerCheckFilter() {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new OwnerCheckFilter(authService, sessionStorage));
+        registrationBean.setFilter(new OwnerCheckFilter(authService));
         registrationBean.setOrder(2);
         registrationBean.addUrlPatterns("/schedule/*");
         return registrationBean;

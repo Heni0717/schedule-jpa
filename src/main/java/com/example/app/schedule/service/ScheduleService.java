@@ -4,7 +4,7 @@ import com.example.app.common.util.AuthUtil;
 import com.example.app.schedule.dto.ScheduleResponseDto;
 import com.example.app.schedule.entity.Schedule;
 import com.example.app.schedule.repository.ScheduleRepository;
-import com.example.app.userinfo.auth.SessionStorage;
+import com.example.app.common.config.SessionStorage;
 import com.example.app.userinfo.entity.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -51,5 +51,10 @@ public class ScheduleService {
     public void deleteSchedule(Long id) {
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
         scheduleRepository.delete(schedule);
+    }
+
+    @Transactional
+    public void deleteSchedulesByUserInfo(Long id) {
+        scheduleRepository.deleteByUserInfoId(id);
     }
 }

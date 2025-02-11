@@ -1,4 +1,4 @@
-package com.example.app.userinfo.auth;
+package com.example.app.common.config;
 
 import com.example.app.userinfo.entity.UserInfo;
 import org.springframework.stereotype.Component;
