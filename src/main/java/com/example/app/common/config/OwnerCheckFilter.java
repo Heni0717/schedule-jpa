@@ -1,7 +1,8 @@
 package com.example.app.common.config;
 
-import com.example.app.common.util.AuthUtil;
 import com.example.app.auth.service.AuthService;
+import com.example.app.common.util.AuthUtil;
+import com.example.app.userinfo.entity.UserInfo;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,9 +21,8 @@ public class OwnerCheckFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         try {
             Long resourceId = Long.valueOf(AuthUtil.extractResourceId(request.getRequestURI()));
-            Long currentUserId = authService.getCurrentUserId(request);
-            boolean isOwner = authService.isOwner(resourceId, currentUserId);
-            if (!isOwner) {
+            UserInfo currentUser = authService.getCurrentUserInfo(request);
+            if (!authService.isOwner(resourceId, currentUser.getId())) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.getWriter().write("접근 권한 없음");
                 return;
