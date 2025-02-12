@@ -22,8 +22,8 @@ public class CommentResponseDto {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.userName = comment.getUserInfo().getUserName();
-        this.createdAt = comment.getCreatedAt().format(FORMATTER);  // yyyy-MM-dd 형식 변환
-        this.updatedAt = comment.getUpdatedAt().format(FORMATTER);  // yyyy-MM-dd 형식 변환
+        this.createdAt = comment.getCreatedAt().format(FORMATTER);
+        this.updatedAt = comment.getUpdatedAt().format(FORMATTER);
     }
 
     public static CommentResponseDto toDto(Comment comment){

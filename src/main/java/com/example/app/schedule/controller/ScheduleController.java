@@ -6,11 +6,10 @@ import com.example.app.schedule.service.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,9 +29,12 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(){
-        List<ScheduleResponseDto> schedules = scheduleService.findAllSchedules();
-        return new ResponseEntity<>(schedules, HttpStatus.OK);
+    public ResponseEntity<Page<ScheduleResponseDto>> findAllSchedules(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        Page<ScheduleResponseDto> allSchedules = scheduleService.findAllSchedules(page, size);
+        return new ResponseEntity<>(allSchedules, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -23,6 +23,7 @@ public class UserInfoService {
     private final PasswordEncoder passwordEncoder;
     private final ScheduleService scheduleService;
 
+    @Transactional
     public UserInfoResponseDto signUp(String userName, String email, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         UserInfo userInfo = new UserInfo(userName, email, encodedPassword);
@@ -30,10 +31,12 @@ public class UserInfoService {
         return new UserInfoResponseDto(newUser.getId(), newUser.getUserName(), newUser.getEmail());
     }
 
+    @Transactional(readOnly = true)
     public List<UserInfoResponseDto> findAllUsers() {
         return userInfoRepository.findAll().stream().map(UserInfoResponseDto::toDto).toList();
     }
 
+    @Transactional(readOnly = true)
     public UserInfoResponseDto findUserInfoById(Long id) {
         UserInfo findUser = userInfoRepository.findUserInfosByIdOrElseThrow(id);
         return new UserInfoResponseDto(findUser.getId(), findUser.getUserName(), findUser.getEmail());
