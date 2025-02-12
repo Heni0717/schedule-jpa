@@ -4,6 +4,8 @@ import com.example.app.schedule.entity.Schedule;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @RequiredArgsConstructor
 public class ScheduleResponseDto {
@@ -11,10 +13,21 @@ public class ScheduleResponseDto {
     private final Long id;
     private final String title;
     private final String content;
+    private final int commentCount;
     private final String userName;
+    private final String createdAt;
+    private final String updatedAt;
 
-    public static ScheduleResponseDto toDto(Schedule schedule){
-        return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContent(), schedule.getUserInfo().getUserName());
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public ScheduleResponseDto(Schedule schedule) {
+        this.id = schedule.getId();
+        this.title = schedule.getTitle();
+        this.content = schedule.getContent();
+        this.commentCount = schedule.getComments().size();
+        this.userName = schedule.getUserInfo().getUserName();
+        this.createdAt = schedule.getCreatedAt().format(FORMATTER);
+        this.updatedAt = schedule.getUpdatedAt().format(FORMATTER);
     }
 
 }
