@@ -7,7 +7,7 @@ create table schedule
     created_at datetime ,
     updated_at datetime ,
     user_id bigint not null,
-    constraint fk_user foreign key (user_id) references user_info (id)
+    foreign key (user_id) references user_info(id) on delete cascade
 );
 
 create table user_info
@@ -20,3 +20,14 @@ create table user_info
     updated_at datetime
 );
 
+create table comment
+(
+    id          bigint auto_increment primary key ,
+    content     text not null ,
+    user_id     bigint not null ,
+    schedule_id bigint not null ,
+    created_at  datetime,
+    updated_at  datetime,
+    foreign key (user_id) references user_info(id) on delete cascade ,
+    foreign key (schedule_id) references schedule(id) on delete cascade
+);
