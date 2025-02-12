@@ -11,13 +11,12 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class WebConfig {
 
-    private final SessionStorage sessionStorage;
     private final AuthService authService;
 
     @Bean
     public FilterRegistrationBean<Filter> sessionAuthFilter() {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new SessionAuthFilter(sessionStorage));
+        registrationBean.setFilter(new SessionAuthFilter());
         registrationBean.setOrder(1);
         registrationBean.addUrlPatterns("/*");
         return registrationBean;
@@ -28,7 +27,7 @@ public class WebConfig {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new OwnerCheckFilter(authService));
         registrationBean.setOrder(2);
-        registrationBean.addUrlPatterns("/schedule/*");
+        registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
 }

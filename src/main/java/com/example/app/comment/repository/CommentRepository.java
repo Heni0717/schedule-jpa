@@ -12,6 +12,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글")
         );
     }
-
     void deleteCommentById(Long id);
 }

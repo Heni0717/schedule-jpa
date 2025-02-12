@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentRequestDto {
 
-    private Long scheduleId;
+    private final Long scheduleId;
     private final String content;
 
 }

@@ -1,11 +1,12 @@
 package com.example.app.userinfo.service;
 
 import com.example.app.common.config.PasswordEncoder;
-import com.example.app.common.config.SessionStorage;
 import com.example.app.schedule.service.ScheduleService;
 import com.example.app.userinfo.dto.UserInfoResponseDto;
 import com.example.app.userinfo.entity.UserInfo;
 import com.example.app.userinfo.repository.UserInfoRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import java.util.List;
 public class UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
-    private final SessionStorage sessionStorage;
     private final PasswordEncoder passwordEncoder;
     private final ScheduleService scheduleService;
 
@@ -54,10 +54,16 @@ public class UserInfoService {
     }
 
     @Transactional
-    public void deleteUserInfo(Long id) {
+    public void deleteUserInfo(Long id, HttpServletRequest request) {
         scheduleService.deleteSchedulesByUserInfo(id);
         UserInfo userInfo = userInfoRepository.findUserInfosByIdOrElseThrow(id);
         userInfoRepository.delete(userInfo);
-        sessionStorage.removeSessionByUserId(id);
+        HttpSession session = request.getSession(false);
+        if(session!=null){
+            UserInfo currentUser = (UserInfo) session.getAttribute("userInfo");
+            if(currentUser!=null && currentUser.getId().equals(id)){
+                session.invalidate();
+            }
+        }
     }
 }
