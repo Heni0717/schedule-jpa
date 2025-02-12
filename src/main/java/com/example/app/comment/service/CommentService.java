@@ -1,8 +1,14 @@
 package com.example.app.comment.service;
 
+import com.example.app.auth.service.AuthService;
+import com.example.app.comment.dto.CommentRequestDto;
 import com.example.app.comment.dto.CommentResponseDto;
 import com.example.app.comment.entity.Comment;
 import com.example.app.comment.repository.CommentRepository;
+import com.example.app.schedule.entity.Schedule;
+import com.example.app.schedule.repository.ScheduleRepository;
+import com.example.app.userinfo.entity.UserInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +20,14 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final AuthService authService;
 
     @Transactional
-    public void createComment(String content) {
-        Comment newComment = new Comment(content);
+    public void createComment(HttpServletRequest request, CommentRequestDto requestDto) {
+        UserInfo userInfo = authService.getCurrentUserInfo(request);
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(requestDto.getScheduleId());
+        Comment newComment = new Comment(requestDto.getContent(), userInfo, schedule);
         commentRepository.save(newComment);
     }
 
@@ -28,18 +38,16 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public CommentResponseDto findCommentById(Long id){
-        Comment findComment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 댓글"));
-        return new CommentResponseDto(findComment.getId(), findComment.getContent());
+        Comment findComment = commentRepository.findByIdOrElseThrow(id);
+        return new CommentResponseDto(findComment);
     }
 
     @Transactional
     public CommentResponseDto updateCommentById(Long id, String newContent){
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 댓글"));
+        Comment comment = commentRepository.findByIdOrElseThrow(id);
         comment.updateComment(newContent);
         commentRepository.save(comment);
-        return new CommentResponseDto(comment.getId(), comment.getContent());
+        return new CommentResponseDto(comment);
     }
 
     @Transactional

@@ -36,16 +36,16 @@ public class AuthService {
                 .orElse(false);
     }
 
-
-    public Long getCurrentUserId(HttpServletRequest request) {
+    public UserInfo getCurrentUserInfo(HttpServletRequest request){
         String sessionId = AuthUtil.extractSessionIdFromCookies(request.getCookies());
-        if (sessionId == null) {
-            throw new IllegalArgumentException("세션 ID가 존재하지 않음");
+        if(sessionId == null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "세션 ID 존재하지 않음");
         }
         UserInfo userInfo = sessionStorage.getSession(sessionId);
-        if (userInfo == null) {
-            throw new IllegalArgumentException("유효하지 않은 세션");
+        if(userInfo == null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 세션");
         }
-        return userInfo.getId();
+        return userInfo;
     }
+
 }

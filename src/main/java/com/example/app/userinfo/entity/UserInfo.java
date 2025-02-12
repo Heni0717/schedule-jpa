@@ -1,13 +1,14 @@
 package com.example.app.userinfo.entity;
 
 
+import com.example.app.comment.entity.Comment;
 import com.example.app.common.model.BaseEntity;
 import com.example.app.schedule.entity.Schedule;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,10 @@ public class UserInfo extends BaseEntity {
     private String password;
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Schedule> schedules;
+    private List<Schedule> schedules = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public UserInfo(String userName, String email, String password){
         this.userName = userName;

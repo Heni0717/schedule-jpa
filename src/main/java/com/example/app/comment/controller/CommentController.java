@@ -3,6 +3,7 @@ package com.example.app.comment.controller;
 import com.example.app.comment.dto.CommentRequestDto;
 import com.example.app.comment.dto.CommentResponseDto;
 import com.example.app.comment.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Void> createComment(@RequestBody CommentRequestDto requestDto){
-        commentService.createComment(requestDto.getContent());
+    public ResponseEntity<Void> createComment(HttpServletRequest request, @RequestBody CommentRequestDto requestDto){
+        commentService.createComment(request, requestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentResponseDto> findCommentById(@PathVariable Long id){
+    public ResponseEntity<CommentResponseDto> findCommentById(@PathVariable Long id) {
         CommentResponseDto commentById = commentService.findCommentById(id);
         return new ResponseEntity<>(commentById, HttpStatus.OK);
     }
