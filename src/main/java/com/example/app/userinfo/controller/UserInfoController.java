@@ -5,6 +5,7 @@ import com.example.app.userinfo.dto.UpdateUserInfoRequestDto;
 import com.example.app.userinfo.dto.UserInfoResponseDto;
 import com.example.app.userinfo.service.UserInfoService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,8 @@ public class UserInfoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserInfo(@PathVariable Long id, HttpServletResponse response){
-        userInfoService.deleteUserInfo(id);
+    public ResponseEntity<Void> deleteUserInfo(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response){
+        userInfoService.deleteUserInfo(id, request);
         Cookie sessionCookie = new Cookie("SESSIONID", null);
         sessionCookie.setHttpOnly(true);
         sessionCookie.setMaxAge(0);

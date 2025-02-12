@@ -19,23 +19,21 @@ public class OwnerCheckFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        try {
+        String method = request.getMethod();
+        String requestUri = request.getRequestURI();
+        if(method.equals("PUT") || method.equals("DELETE")){
             Long resourceId = Long.valueOf(AuthUtil.extractResourceId(request.getRequestURI()));
             UserInfo currentUser = authService.getCurrentUserInfo(request);
-            if (!authService.isOwner(resourceId, currentUser.getId())) {
+            String resourceType = requestUri.startsWith("/schedules/") ? "schedule" :
+                            requestUri.startsWith("/users/") ? "user" :
+                            requestUri.startsWith("/comments/") ? "comment" : null;
+            if (resourceType == null || !authService.isOwner(resourceId, currentUser.getId(), resourceType)) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setContentType("text/plain; charset=UTF-8");
                 response.getWriter().write("접근 권한 없음");
                 return;
             }
-            filterChain.doFilter(request, response);
-        } catch (NumberFormatException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("잘못된 리소스 ID 형식");
-        } catch (IllegalArgumentException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write(e.getMessage());
         }
-
+        filterChain.doFilter(request, response);
     }
-
 }

@@ -1,17 +1,14 @@
 package com.example.app.schedule.service;
 
-import com.example.app.common.config.SessionStorage;
-import com.example.app.common.util.AuthUtil;
 import com.example.app.schedule.dto.ScheduleResponseDto;
 import com.example.app.schedule.entity.Schedule;
 import com.example.app.schedule.repository.ScheduleRepository;
 import com.example.app.userinfo.entity.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,24 +17,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final SessionStorage sessionStorage;
 
     @Transactional
     public ScheduleResponseDto createSchedule(String title, String content, HttpServletRequest request) {
-        String sessionId = AuthUtil.extractSessionIdFromCookies(request.getCookies());
-        UserInfo userInfo = sessionStorage.getSession(sessionId);
-        if (userInfo == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userInfo") == null ) {
             throw new IllegalStateException("로그인 정보 없음");
         }
+        UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
         Schedule schedule = new Schedule(title, content, userInfo);
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new ScheduleResponseDto(savedSchedule);
     }
 
     @Transactional(readOnly = true)
-    public Page<ScheduleResponseDto> findAllSchedules(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
-        Page<Schedule> schedulePage = scheduleRepository.findAllByOrderByUpdatedAtDesc(pageable);
+    public Page<ScheduleResponseDto> findAllSchedules(Pageable pageable) {
+        Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
         return schedulePage.map(ScheduleResponseDto::new);
     }
 
