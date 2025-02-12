@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 public class UserInfoResponseDto {
 
     private final Long id;
-    private final String username;
+    private final String userName;
     private final String email;
 
     public static UserInfoResponseDto toDto(UserInfo userInfo){
-        return new UserInfoResponseDto(userInfo.getId(), userInfo.getUsername(), userInfo.getEmail());
+        return new UserInfoResponseDto(userInfo.getId(), userInfo.getUserName(), userInfo.getEmail());
     }
 }

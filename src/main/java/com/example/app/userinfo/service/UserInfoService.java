@@ -1,5 +1,8 @@
 package com.example.app.userinfo.service;
 
+import com.example.app.common.config.PasswordEncoder;
+import com.example.app.common.config.SessionStorage;
+import com.example.app.schedule.service.ScheduleService;
 import com.example.app.userinfo.dto.UserInfoResponseDto;
 import com.example.app.userinfo.entity.UserInfo;
 import com.example.app.userinfo.repository.UserInfoRepository;
@@ -16,11 +19,15 @@ import java.util.List;
 public class UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
+    private final SessionStorage sessionStorage;
+    private final PasswordEncoder passwordEncoder;
+    private final ScheduleService scheduleService;
 
-    public UserInfoResponseDto signUp(String username, String email, String password) {
-        UserInfo userInfo = new UserInfo(username, email, password);
+    public UserInfoResponseDto signUp(String userName, String email, String password) {
+        String encodedPassword = passwordEncoder.encode(password);
+        UserInfo userInfo = new UserInfo(userName, email, encodedPassword);
         UserInfo newUser = userInfoRepository.save(userInfo);
-        return new UserInfoResponseDto(newUser.getId(), newUser.getUsername(), newUser.getEmail());
+        return new UserInfoResponseDto(newUser.getId(), newUser.getUserName(), newUser.getEmail());
     }
 
     public List<UserInfoResponseDto> findAllUsers() {
@@ -29,22 +36,25 @@ public class UserInfoService {
 
     public UserInfoResponseDto findUserInfoById(Long id) {
         UserInfo findUser = userInfoRepository.findUserInfosByIdOrElseThrow(id);
-        return new UserInfoResponseDto(findUser.getId(), findUser.getUsername(), findUser.getEmail());
+        return new UserInfoResponseDto(findUser.getId(), findUser.getUserName(), findUser.getEmail());
     }
 
     @Transactional
-    public UserInfoResponseDto updateUserInfoById(Long id, String username, String oldPassword, String newPassword) {
+    public UserInfoResponseDto updateUserInfoById(Long id, String userName, String oldPassword, String newPassword) {
         UserInfo userInfo = userInfoRepository.findUserInfosByIdOrElseThrow(id);
-        if(!userInfo.getPassword().equals(oldPassword)){
+        if(!passwordEncoder.matches(oldPassword, userInfo.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호 불일치");
         }
-        userInfo.updateUser(username, newPassword);
-        userInfoRepository.save(userInfo);
-        return new UserInfoResponseDto(userInfo.getId(), userInfo.getUsername(), userInfo.getEmail());
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        userInfo.updateUser(userName, encodedNewPassword);
+        return new UserInfoResponseDto(userInfo.getId(), userInfo.getUserName(), userInfo.getEmail());
     }
 
+    @Transactional
     public void deleteUserInfo(Long id) {
+        scheduleService.deleteSchedulesByUserInfo(id);
         UserInfo userInfo = userInfoRepository.findUserInfosByIdOrElseThrow(id);
         userInfoRepository.delete(userInfo);
+        sessionStorage.removeSessionByUserId(id);
     }
 }

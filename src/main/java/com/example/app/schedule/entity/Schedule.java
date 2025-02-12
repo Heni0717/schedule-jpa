@@ -1,7 +1,7 @@
 package com.example.app.schedule.entity;
 
 
-import com.example.app.common.commonentity.BaseEntity;
+import com.example.app.common.model.BaseEntity;
 import com.example.app.userinfo.entity.UserInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,16 +20,17 @@ public class Schedule extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "longtext")
+    @Column(columnDefinition = "text")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserInfo userInfo;
 
-    public Schedule(String title, String content){
+    public Schedule(String title, String content, UserInfo userInfo){
         this.title = title;
         this.content = content;
+        this.userInfo = userInfo;
     }
 
     public void updateSchedule(String title, String content){

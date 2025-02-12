@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
 
     default UserInfo findUserInfosByIdOrElseThrow(Long id){
@@ -13,4 +15,5 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
         );
     }
 
+    Optional<UserInfo> findByEmail(String email);
 }

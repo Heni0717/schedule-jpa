@@ -1,4 +1,4 @@
-package com.example.app.common.commonentity;
+package com.example.app.common.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
