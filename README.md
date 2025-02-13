@@ -28,14 +28,32 @@ JPA를 활용해 DB 관리와 Cookie/Session을 활용한 인증/인가를 적�
 <details style="margin-left: 30px;">
   <summary>Schedule</summary>
 
+- 페이징 하지 않은 상태의 API 명세입니다.
+
 | **기능**    | **Method** | **URL**             | **request**        | **response**        | **상태 코드**     |
 |-----------|------------|---------------------|--------------------|---------------------|---------------|
 | **일정 생성** | `POST`     | `/schedules`        | ScheduleRequestDto | -                   | `201 Created` |
 | **일정 조회** | `GET`      | `/schedules`        | -                  | ScheduleResponseDto | `200 OK`      |
 | **일정 수정** | `PUT`      | `/schedules/{id}` | ScheduleRequestDto | ScheduleResponseDto | `200 OK`      |
 | **일정 삭제** | `DELETE`   | `/schedules/{id}`   | -                  | -                   | `200 OK`      |
-    
-
+- ScheduleRequestDto
+```
+{
+  "title": "일정 제목",
+  "content": "일정 내용"
+}
+```
+- ScheduleResponseDto
+```
+  {
+  "id": 1,
+  "title": "일정 제목",
+  "content": "일정 내용",
+  "userName": "작성자명",
+  "createdAt": "2025-01-01",
+  "updatedAt": "2025-01-01"
+  }
+```
 </details>
 
 <details style="margin-left: 30px;">
@@ -47,6 +65,30 @@ JPA를 활용해 DB 관리와 Cookie/Session을 활용한 인증/인가를 적�
 | **회원 조회**    | `GET`      | `/users`        | -                        | UserInfoResponseDto | `200 OK`      |
 | **회원 정보 수정** | `PUT`      | `/users/{id}` | UpdateUserInfoRequestDto | UserInfoResponseDto | `200 OK`      |
 | **회원 삭제**    | `DELETE`   | `/users/{id}`   | -                        | -                   | `200 OK`      |
+- SignUpRequestDto
+```
+{
+  "userName": "사용자 이름",
+  "email": "이메일",
+  "password": "비밀번호"
+}
+```
+- UserInfoResponseDto
+```
+{
+  "id": 고유 식별자,
+  "userName": "사용자 이름",
+  "email": "이메일"
+}
+```
+- UpdateUserInfoRequestDto
+```
+{
+  "userName": "사용자 이름",
+  "oldPassword": "현재 비밀번호",
+  "newPassword": "새 비밀번호"
+}
+```
 </details>
 
 <details style="margin-left: 30px;">
@@ -58,6 +100,24 @@ JPA를 활용해 DB 관리와 Cookie/Session을 활용한 인증/인가를 적�
 | **회원 조회**    | `GET`      | `/comments`   | -                 | CommentResponseDto | `200 OK`      |
 | **회원 정보 수정** | `PUT`      | `/comments/{id}` | CommentRequestDto | CommentResponseDto | `200 OK`      |
 | **회원 삭제**    | `DELETE`   | `/comments/{id}` | -                 | -                  | `200 OK`      |
+- CommentRequestDto
+```
+{
+  "content": "댓글 내용",
+  "scheduleId": 일정 고유 식별자-댓글이 작성될 일정
+}
+```
+- CommentRequestDto
+```
+{
+  "id": 고유 식별자,
+  "scheduleId": 일정 고유 식별자,
+  "content": "댓글 내용",
+  "userName": "작성자명",
+  "createdAt": "2025-01-01",
+  "updatedAt": "2025-01-01"
+}
+```
 </details>
 
 <details style="margin-left: 30px;">
@@ -67,6 +127,13 @@ JPA를 활용해 DB 관리와 Cookie/Session을 활용한 인증/인가를 적�
 |-----------|------------|----------------|-----------------|--------------|---------------|
 | **로그인**   | `POST`     | `/auth/login`  | LoginRequestDto | -            | `200 OK`      |
 | **로그인**   | `POST`     | `/auth/logout` | -               | -            | `200 OK`      |
+- LoginRequestDto
+```
+{
+  "email": "이메일",
+  "password": "비밀번호"
+}
+```
 </details>
 
 
@@ -110,6 +177,6 @@ JPA를 활용해 DB 관리와 Cookie/Session을 활용한 인증/인가를 적�
 ---
 ### 트러블 슈팅
 
-- [TIL 링크](https://heni0717.tistory.com/)
+- [TIL 링크](https://heni0717.tistory.com/26)
 
 ---
